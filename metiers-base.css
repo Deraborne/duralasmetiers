@@ -180,38 +180,38 @@ body {
 
 .quest-members {
   padding: 8px;
-  border-top: 1px solid rgba(247, 233, 201, 0.14);
-  background: rgba(255, 255, 255, 0.015);
+  border-top: 1px solid rgba(247, 233, 201, 0.10);
+  background: rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
 }
 
 .quest-members details {
   margin: 0;
-  border: 1px solid rgba(247, 233, 201, 0.18);
+  border: 1px solid rgba(247, 233, 201, 0.14);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.18);
   box-shadow: none;
 }
 
 .quest-members summary {
   padding: 8px 10px;
   font-weight: 700;
-  color: #f7e9c9;
-  background: rgba(247, 233, 201, 0.04);
+  color: #e6d6b0;
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .quest-members summary:hover {
-  background: rgba(247, 233, 201, 0.07);
+  background: rgba(0, 0, 0, 0.38);
 }
 
 .quest-members-list {
   padding: 10px;
-  border-top: 1px solid rgba(247, 233, 201, 0.14);
+  border-top: 1px solid rgba(247, 233, 201, 0.10);
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
-  color: #dbcca8;
-  background: rgba(255, 255, 255, 0.015);
+  color: #cfbd98;
+  background: rgba(0, 0, 0, 0.22);
 }
 
 .mentions-auto {
