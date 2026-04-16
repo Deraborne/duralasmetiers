@@ -1,14 +1,20 @@
+body {
+  color: #dbcca8;
+  background: transparent;
+}
+
 .quest-accordion {
   width: 100%;
   margin: 0 auto;
   font-size: 13px;
   line-height: 1.35;
+  color: #dbcca8;
 }
 
 .quest-accordion details {
   border: 1px solid currentColor;
   margin: 6px 0;
-  background: rgba(255,255,255,.03);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .quest-accordion summary {
@@ -16,18 +22,19 @@
   padding: 8px 10px;
   font-weight: bold;
   list-style: none;
+  color: #dbcca8;
 }
 
 .quest-accordion summary::-webkit-details-marker {
   display: none;
 }
 
-.quest-accordion summary:before {
+.quest-accordion summary::before {
   content: "[+] ";
   font-weight: bold;
 }
 
-.quest-accordion details[open] summary:before {
+.quest-accordion details[open] summary::before {
   content: "[-] ";
 }
 
@@ -42,6 +49,7 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  color: #dbcca8;
 }
 
 .quest-table th,
@@ -56,8 +64,12 @@
 
 .quest-table th {
   width: 140px;
-  white-space: normal;
   font-weight: bold;
+  color: #ffffff;
+}
+
+.quest-table td {
+  color: #dbcca8;
 }
 
 .quest-members {
@@ -67,12 +79,13 @@
 .quest-members details {
   margin: 0;
   border: 1px solid currentColor;
-  background: rgba(255,255,255,.02);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .quest-members summary {
   padding: 6px 8px;
   font-weight: bold;
+  color: #dbcca8;
 }
 
 .quest-members-list {
@@ -81,4 +94,22 @@
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
+  color: #dbcca8;
+}
+
+.quest-accordion a,
+.quest-accordion a:link {
+  color: #f7e9c9;
+}
+
+.quest-accordion a:visited {
+  color: #f7e9c9;
+}
+
+.quest-accordion a:active {
+  color: #f7e9c9;
+}
+
+.quest-accordion a:hover {
+  color: #ffffff;
 }
