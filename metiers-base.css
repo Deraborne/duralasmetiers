@@ -128,8 +128,9 @@ body {
 }
 
 .quest-table.quest-table-ressources {
-  width: auto;
-  table-layout: auto;
+  width: 100%;
+  max-width: 685px;
+  table-layout: fixed;
   margin: 0 auto;
 }
 
@@ -140,9 +141,14 @@ body {
   padding: 6px 8px;
 }
 
-.quest-table.quest-table-ressources td:first-child,
-.quest-table.quest-table-ressources th:first-child {
-  width: auto;
+.quest-table.quest-table-ressources th:first-child,
+.quest-table.quest-table-ressources td:first-child {
+  width: 145px;
+}
+
+.quest-table.quest-table-ressources th:not(:first-child),
+.quest-table.quest-table-ressources td:not(:first-child) {
+  width: 135px;
 }
 
 .quest-table.quest-table-ressources th.quest-empty-col,
@@ -153,7 +159,6 @@ body {
 
 .quest-table.quest-table-ressources td.quest-empty {
   padding: 4px 6px;
-  min-width: 24px;
 }
 
 .quest-members {
