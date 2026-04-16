@@ -127,6 +127,24 @@ body {
   font-weight: 700;
 }
 
+.quest-table.quest-table-ressources {
+  width: auto;
+  table-layout: auto;
+  margin: 0 auto;
+}
+
+.quest-table.quest-table-ressources th,
+.quest-table.quest-table-ressources td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 6px 8px;
+}
+
+.quest-table.quest-table-ressources td:first-child,
+.quest-table.quest-table-ressources th:first-child {
+  width: auto;
+}
+
 .quest-members {
   padding: 8px;
   border-top: 1px solid rgba(247, 233, 201, 0.14);
