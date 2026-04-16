@@ -113,3 +113,16 @@ body {
 .quest-accordion a:hover {
   color: #ffffff;
 }
+
+.forum-mention,
+.forum-mention:link,
+.forum-mention:visited,
+.forum-mention:active {
+  color: #f7e9c9;
+  text-decoration: none;
+}
+
+.forum-mention:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
