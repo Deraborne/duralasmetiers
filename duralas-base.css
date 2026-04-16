@@ -1,78 +1,84 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
+.quest-accordion {
+  width: 100%;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
-body {
-  font-family: 'Philosopher', serif;
-  font-size: 12px;
-  color: #dbcca8;
-  line-height: 1.4;
+.quest-accordion details {
+  border: 1px solid currentColor;
+  margin: 6px 0;
+  background: rgba(255,255,255,.03);
 }
 
-a,
-a:link {
-  color: #f7e9c9;
-  font-size: 12px;
-  text-decoration: none;
+.quest-accordion summary {
+  cursor: pointer;
+  padding: 8px 10px;
+  font-weight: bold;
+  list-style: none;
 }
 
-a:visited {
-  color: #f7e9c9;
+.quest-accordion summary::-webkit-details-marker {
+  display: none;
 }
 
-a:active {
-  color: #f7e9c9;
+.quest-accordion summary:before {
+  content: "[+] ";
+  font-weight: bold;
 }
 
-a:hover {
-  color: #ffffff;
-  text-decoration: underline;
+.quest-accordion details[open] summary:before {
+  content: "[-] ";
 }
 
-h1, h2, h3, h4, h5, h6,
-.title,
-.message-title,
-.category-title {
-  margin: 0 0 8px 0;
-  font-family: 'Philosopher', serif;
-  font-size: 15px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: #ffffff;
+.quest-scroll {
+  width: 100%;
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-p {
-  margin: 0 0 10px 0;
-}
-
-blockquote,
-.quote,
-.citation {
-  color: #f2e2bf;
-}
-
-table {
+.quest-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
-th {
-  padding: 4px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-  border: 1px solid #999;
+.quest-table th,
+.quest-table td {
+  border: 1px solid currentColor;
+  padding: 6px;
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-td {
-  padding: 4px;
-  font-size: 12px;
-  color: #dbcca8;
-  border: 1px solid #999;
+.quest-table th {
+  width: 140px;
+  white-space: normal;
+  font-weight: bold;
 }
 
-small {
-  font-size: 11px;
+.quest-members {
+  padding: 6px;
+}
+
+.quest-members details {
+  margin: 0;
+  border: 1px solid currentColor;
+  background: rgba(255,255,255,.02);
+}
+
+.quest-members summary {
+  padding: 6px 8px;
+  font-weight: bold;
+}
+
+.quest-members-list {
+  padding: 8px;
+  border-top: 1px solid currentColor;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
