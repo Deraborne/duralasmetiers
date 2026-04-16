@@ -66,6 +66,8 @@ body {
   max-height: 800px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
 .quest-table {
@@ -75,6 +77,9 @@ body {
   table-layout: fixed;
   color: #dbcca8;
   background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(247, 233, 201, 0.18);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .quest-table th,
@@ -123,13 +128,13 @@ body {
 }
 
 .quest-members {
-  padding: 8px;
+  padding: 0;
   border-top: 1px solid rgba(247, 233, 201, 0.14);
   background: rgba(255, 255, 255, 0.015);
 }
 
 .quest-members details {
-  margin: 0;
+  margin: 8px;
   border: 1px solid rgba(247, 233, 201, 0.18);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.02);
