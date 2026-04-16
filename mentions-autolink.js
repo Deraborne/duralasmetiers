@@ -32,14 +32,14 @@
 
   function createMentionFragment(text, membersMap) {
     const fragment = document.createDocumentFragment();
-    const regex = /@(?:"([^"]+)"|([A-Za-zÀ-ÿÆæŒœ0-9_'’\- ]+))/g;
+    const regex = /@([A-Za-zÀ-ÿÆæŒœ0-9_'’\-]+(?: [A-Za-zÀ-ÿÆæŒœ0-9_'’\-]+)*)/g;
 
     let lastIndex = 0;
     let match;
 
     while ((match = regex.exec(text)) !== null) {
       const fullMatch = match[0];
-      const rawName = (match[1] || match[2] || "").trim();
+      const rawName = (match[1] || "").trim();
       const normalized = normalizeName(rawName);
       const url = membersMap.get(normalized);
 
