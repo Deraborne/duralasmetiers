@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Duralas Metiers Embed</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    #inner {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      min-height: 200px;
+    }
+
+    .embed-error {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      font: 14px Arial, sans-serif;
+      color: #fff;
+      background: #5a1f1f;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="inner" loading="lazy"></iframe>
+
+  <script>
+    (async () => {
+      const params = new URLSearchParams(location.search);
+      const rawPage = params.get("page") || "";
+
+      // Autorise uniquement les chemins internes du dépôt
+      // Exemples :
+      // Bucheron/BRessources.html
+      // Remede/RCrafts.html
+      // liste_membres.html
+      const safePath = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.html$/;
+
+      if (!safePath.test(rawPage)) {
+        document.body.innerHTML = '<div class="embed-error">Page invalide.</div>';
+        return;
+      }
+
+      let version = "1";
+
+      try {
+        const res = await fetch("./version.json", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.version) {
+            version = String(data.version);
+          }
+        }
+      } catch (e) {
+        // Fallback silencieux
+      }
+
+      const target = new URL(rawPage, location.href);
+
+      // Recopie tous les paramètres sauf "page"
+      for (const [key, value] of params.entries()) {
+        if (key !== "page") {
+          target.searchParams.set(key, value);
+        }
+      }
+
+      // Ajoute la version globale
+      target.searchParams.set("v", version);
+
+      const iframe = document.getElementById("inner");
+      iframe.src = target.toString();
+
+      function resizeInner() {
+        try {
+          const doc = iframe.contentDocument;
+          if (!doc) return;
+
+          const h = Math.max(
+            doc.body ? doc.body.scrollHeight : 0,
+            doc.documentElement ? doc.documentElement.scrollHeight : 0
+          );
+
+          if (h > 0) {
+            iframe.style.height = h + "px";
+          }
+
+          // Informe le parent si un script veut écouter la hauteur
+          parent.postMessage(
+            {
+              type: "duralasmetiers:resize",
+              height: h
+            },
+            "*"
+          );
+        } catch (e) {
+          // Rien
+        }
+      }
+
+      iframe.addEventListener("load", () => {
+        resizeInner();
+
+        try {
+          const doc = iframe.contentDocument;
+          if (!doc) return;
+
+          if (window.ResizeObserver && doc.body) {
+            new ResizeObserver(resizeInner).observe(doc.body);
+          }
+        } catch (e) {
+          // Rien
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
