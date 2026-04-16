@@ -30,72 +30,52 @@
     return map;
   }
 
-  function createMentionFragment(text, membersMap) {
-    const fragment = document.createDocumentFragment();
-    const regex = /@([A-Za-zÀ-ÿÆæŒœ0-9_'’\-]+(?: [A-Za-zÀ-ÿÆæŒœ0-9_'’\-]+)*)/g;
-
-    let lastIndex = 0;
-    let match;
-
-    while ((match = regex.exec(text)) !== null) {
-      const fullMatch = match[0];
-      const rawName = (match[1] || "").trim();
-      const normalized = normalizeName(rawName);
-      const url = membersMap.get(normalized);
-
-      if (match.index > lastIndex) {
-        fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
-      }
-
-      if (url) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.target = "_top";
-        a.className = "forum-mention";
-        a.textContent = fullMatch;
-        fragment.appendChild(a);
-      } else {
-        fragment.appendChild(document.createTextNode(fullMatch));
-      }
-
-      lastIndex = regex.lastIndex;
+  function buildMentionLink(fullText, rawName, membersMap) {
+    const url = membersMap.get(normalizeName(rawName));
+    if (!url) {
+      return document.createTextNode(fullText);
     }
 
-    if (lastIndex < text.length) {
-      fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-    }
-
-    return fragment;
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_top";
+    a.className = "forum-mention";
+    a.textContent = fullText;
+    return a;
   }
 
-  function processTextNodes(root, membersMap) {
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode(node) {
-        if (!node.nodeValue || !node.nodeValue.includes("@")) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        if (!node.parentNode) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        const parentTag = node.parentNode.nodeName;
-        if (parentTag === "SCRIPT" || parentTag === "STYLE" || parentTag === "A") {
-          return NodeFilter.FILTER_REJECT;
-        }
-        return NodeFilter.FILTER_ACCEPT;
+  function processMembersList(el, membersMap) {
+    const text = el.textContent.trim();
+    const parts = text.split(/\s+-\s+/);
+    const fragment = document.createDocumentFragment();
+
+    parts.forEach((part, index) => {
+      if (index > 0) {
+        fragment.appendChild(document.createTextNode(" - "));
+      }
+
+      const cleaned = part.trim();
+
+      // Capture un éventuel signe de ponctuation final
+      const match = cleaned.match(/^@(.+?)([.,;!?])?$/);
+
+      if (!match) {
+        fragment.appendChild(document.createTextNode(cleaned));
+        return;
+      }
+
+      const rawName = match[1].trim();
+      const trailingPunctuation = match[2] || "";
+
+      fragment.appendChild(buildMentionLink("@" + rawName, rawName, membersMap));
+
+      if (trailingPunctuation) {
+        fragment.appendChild(document.createTextNode(trailingPunctuation));
       }
     });
 
-    const textNodes = [];
-    let current;
-
-    while ((current = walker.nextNode())) {
-      textNodes.push(current);
-    }
-
-    textNodes.forEach((node) => {
-      const fragment = createMentionFragment(node.nodeValue, membersMap);
-      node.parentNode.replaceChild(fragment, node);
-    });
+    el.innerHTML = "";
+    el.appendChild(fragment);
   }
 
   async function initMentions() {
@@ -106,7 +86,7 @@
       const membersMap = buildMembersMap(doc);
 
       document.querySelectorAll(".quest-members-list, .mentions-auto").forEach((el) => {
-        processTextNodes(el, membersMap);
+        processMembersList(el, membersMap);
       });
     } catch (error) {
       console.error("Impossible de charger la liste des membres :", error);
