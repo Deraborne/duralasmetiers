@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dùralas Métiers – Embed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Duralas Metiers Embed</title>
   <style>
     html, body {
       margin: 0;
@@ -12,115 +12,132 @@
       overflow: hidden;
     }
 
-    #inner {
+    #embed-frame {
       display: block;
       width: 100%;
       border: 0;
+      overflow: hidden;
       background: transparent;
-      min-height: 120px;
     }
 
-    .embed-error {
-      box-sizing: border-box;
-      width: 100%;
+    #embed-error {
+      display: none;
       padding: 12px;
-      font: 14px Arial, sans-serif;
-      color: #fff;
-      background: #5a1f1f;
+      color: #dbcca8;
+      background: transparent;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <iframe id="inner" loading="lazy"></iframe>
+
+  <iframe id="embed-frame" scrolling="no"></iframe>
+  <div id="embed-error"></div>
 
   <script>
-    (async () => {
-      const params = new URLSearchParams(location.search);
-      const rawPage = params.get("page") || "";
+    (function () {
+      const iframe = document.getElementById("embed-frame");
+      const errorBox = document.getElementById("embed-error");
+      const params = new URLSearchParams(window.location.search);
+      const page = params.get("page");
 
-      // Autorise uniquement des chemins internes du dépôt vers des .html
-      // Exemples valides :
-      // - Bucheron/BRessources.html
-      // - Chasse/ChasseQuests.html
-      // - liste_membres.html
-      const safePath = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.html$/;
-
-      if (!safePath.test(rawPage)) {
-        document.body.innerHTML = '<div class="embed-error">Page invalide.</div>';
+      if (!page) {
+        errorBox.style.display = "block";
+        errorBox.textContent = "Aucune page à afficher.";
         return;
       }
 
-      let version = "1";
-
-      try {
-        const res = await fetch("./version.json", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.version) {
-            version = String(data.version);
-          }
-        }
-      } catch (e) {
-        // Si le fichier est inaccessible, on garde la version par défaut
+      // Sécurité simple : on n'autorise pas les URLs externes
+      if (/^https?:\/\//i.test(page) || page.startsWith("//")) {
+        errorBox.style.display = "block";
+        errorBox.textContent = "URL externe refusée.";
+        return;
       }
 
-      const target = new URL(rawPage, location.href);
+      iframe.src = page;
 
-      // Recopie tous les paramètres sauf "page"
-      for (const [key, value] of params.entries()) {
-        if (key !== "page") {
-          target.searchParams.set(key, value);
-        }
-      }
-
-      // Ajoute / remplace la version
-      target.searchParams.set("v", version);
-
-      const iframe = document.getElementById("inner");
-      iframe.src = target.toString();
-
-      function resizeInner() {
+      function getInnerHeight() {
         try {
-          const doc = iframe.contentDocument;
-          if (!doc) return;
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (!doc) return 0;
 
-          const h = Math.max(
-            doc.body ? doc.body.scrollHeight : 0,
-            doc.documentElement ? doc.documentElement.scrollHeight : 0
-          );
+          const body = doc.body;
+          const html = doc.documentElement;
 
-          if (h > 0) {
-            iframe.style.height = h + "px";
-          }
-
-          // Envoie la hauteur à la page parente (Forumactif)
-          parent.postMessage(
-            {
-              type: "duralasmetiers:resize",
-              height: h
-            },
-            "*"
+          return Math.max(
+            body ? body.scrollHeight : 0,
+            body ? body.offsetHeight : 0,
+            html ? html.scrollHeight : 0,
+            html ? html.offsetHeight : 0,
+            html ? html.clientHeight : 0
           );
         } catch (e) {
-          // Rien
+          return 0;
         }
+      }
+
+      function sendHeight() {
+        const height = getInnerHeight();
+        if (!height) return;
+
+        iframe.style.height = height + "px";
+
+        window.parent.postMessage({
+          type: "duralasmetiers:resize",
+          height: height
+        }, "*");
+      }
+
+      function installObservers() {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (!doc) return;
+
+          const body = doc.body;
+          const html = doc.documentElement;
+
+          if (body) {
+            const roBody = new ResizeObserver(sendHeight);
+            roBody.observe(body);
+          }
+
+          if (html) {
+            const roHtml = new ResizeObserver(sendHeight);
+            roHtml.observe(html);
+          }
+
+          iframe.contentWindow.addEventListener("load", sendHeight);
+          iframe.contentWindow.addEventListener("resize", sendHeight);
+
+          const imgs = doc.images || [];
+          Array.from(imgs).forEach((img) => {
+            if (!img.complete) {
+              img.addEventListener("load", sendHeight);
+              img.addEventListener("error", sendHeight);
+            }
+          });
+
+          const fonts = doc.fonts;
+          if (fonts && fonts.ready) {
+            fonts.ready.then(sendHeight).catch(() => {});
+          }
+        } catch (e) {}
       }
 
       iframe.addEventListener("load", () => {
-        resizeInner();
+        sendHeight();
+        installObservers();
 
-        try {
-          const doc = iframe.contentDocument;
-          if (!doc) return;
-
-          if (window.ResizeObserver && doc.body) {
-            new ResizeObserver(resizeInner).observe(doc.body);
-          }
-        } catch (e) {
-          // Rien
-        }
+        requestAnimationFrame(sendHeight);
+        setTimeout(sendHeight, 50);
+        setTimeout(sendHeight, 150);
+        setTimeout(sendHeight, 300);
+        setTimeout(sendHeight, 700);
+        setTimeout(sendHeight, 1200);
       });
     })();
   </script>
+
 </body>
 </html>
