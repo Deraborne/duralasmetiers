@@ -9,7 +9,7 @@
       margin: 0;
       padding: 0;
       background: transparent;
-      overflow: auto;
+      overflow: hidden;
     }
 
     #embed-frame {
@@ -17,6 +17,7 @@
       width: 100%;
       border: 0;
       background: transparent;
+      overflow: hidden;
     }
 
     #embed-error {
@@ -148,7 +149,10 @@
 
         try {
           doc.querySelectorAll("details").forEach((detail) => {
-            detail.addEventListener("toggle", scheduleHeightChecks);
+            if (!detail.dataset.duralasToggleBound) {
+              detail.dataset.duralasToggleBound = "1";
+              detail.addEventListener("toggle", scheduleHeightChecks);
+            }
           });
 
           const mo = new MutationObserver(() => {
