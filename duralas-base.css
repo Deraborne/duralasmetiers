@@ -126,3 +126,24 @@ body {
   color: #ffffff;
   text-decoration: underline;
 }
+
+.toggle-all-details-wrap {
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+
+.toggle-all-details {
+  padding: 8px 14px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #f7e9c9;
+  font-family: 'Philosopher', serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.toggle-all-details:hover {
+  background: rgba(247, 233, 201, 0.08);
+  color: #ffffff;
+}
