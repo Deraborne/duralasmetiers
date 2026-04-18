@@ -21,11 +21,11 @@ Prend en compte la hauteur indiquée non pas dans height (comme height:800), mai
 Ex. :
 <iframe src="https://delta-delete.github.io/duralasmetiers/embed-fitmax.html?page=Fusion/FusionCrafts.html&max=800" style="width:100%;height:120px;border:none;"></iframe>
 
-Enfin, particularité importante : pour afficher une seule donnée, ou plusieurs, parmi un tableau comme celui de la chasse qui contient 5 créatures, on enlève le ? après le .html pour indiquer la clé à utiliser (key), telle qu’elle est inscrite dans le document sur GitHub.
+Enfin, particularité importante : pour afficher une seule donnée, ou plusieurs, parmi un tableau comme celui de la chasse qui contient 5 créatures, on écrit après le .html pour indiquer la clé à utiliser (key), telle qu’elle est inscrite dans le document sur GitHub.
 Ici, dans l’exemple, sanglier, ce qui donne %3Fres%3Dsanglier.
 
 Tableau entier :
-<iframe src="https://delta-delete.github.io/duralasmetiers/embed.html?page=Chasse/CRessources.html?" style="width:100%;height:120px;border:none;"></iframe>
+<iframe src="https://delta-delete.github.io/duralasmetiers/embed.html?page=Chasse/CRessources.html" style="width:100%;height:120px;border:none;"></iframe>
 
 Morceau de tableau :
 <iframe src="https://delta-delete.github.io/duralasmetiers/embed.html?page=Chasse/CRessources.html%3Fres%3Dsanglier" style="width:100%;height:120px;border:none;"></iframe>
